@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter.font import names
+
 from db import database
 from tkinter import messagebox, Button
 import sqlite3
@@ -224,6 +226,64 @@ def lab_technician_form(root, panel_left, panel_right):
 
         enter_submit = tk.Button(activity_frame, text="➜", font=("Open Sans ExtraBold", 30), bg="#ffffff", fg="#061e41", activeforeground="#ffffff", activebackground="#061e41", bd=0, highlightthickness=0,relief='flat', command=grab_submit)
         enter_submit.place(x=610, y=130, width=50, height=51)
+
+    def lab_test_results():
+        clear_the_activity_frame()
+        m_header = tk.Label(activity_frame, text="Lab Test Result", font=("Open Sans ExtraBold", 30), bg="#061e41", fg="#ffffff")
+        m_header.place(x=295, y=15)
+        enter_text = tk.Label(activity_frame, text="Enter the patient id", font=("Open Sans ExtraBold", 25), bg="#061e41", fg="#ffffff")
+        enter_text.place(x=285, y=75)
+        enter_id_placeholder = "         Patient Id"
+
+        enter_id = tk.Entry(activity_frame, bg="#ffffff", fg="grey", relief="flat", font=("Open Sans ExtraBold", 25))
+        enter_id.insert(0, enter_id_placeholder)
+
+        def enter_id_click(event):
+            if enter_id.get() == enter_id_placeholder:
+                enter_id.delete(0, tk.END)
+                enter_id.config(fg="#061e41")
+
+        def enter_id_non_click(event):
+            if enter_id.get() == "":
+                enter_id.insert(0, enter_id_placeholder)
+                enter_id.config(fg="grey")
+
+        enter_id.bind("<FocusIn>", enter_id_click)
+        enter_id.bind("<FocusOut>", enter_id_non_click)
+        enter_id.place(width=root.winfo_screenwidth() // 4, x=260, y=130)
+
+        def grab_submit():
+            id_no = enter_id.get()
+            conn = sqlite3.connect("../db/database_storage.db")
+            cursor = conn.cursor()
+            cursor.execute("SELECT patient_id, name, lab_test_result FROM existed_patient WHERE patient_id = ?", (id_no,))
+            ltr=cursor.fetchone()
+            if id_no == enter_id_placeholder or id_no == "":
+                messagebox.showwarning("Input Error", "Please enter ID number.")
+                return
+            if ltr:
+                patient_id = ltr[0]
+                name = ltr[1]
+                lab_result = ltr[2]
+                v_patient_id = tk.Label(activity_frame, text=patient_id, font=("Open Sans ExtraBold", 20), fg="#ffffff",bg="#061e41")
+                v_patient_id.place(x=245, y=190)
+                v_name = tk.Label(activity_frame, text=name, font=("Open Sans ExtraBold", 20), fg="#ffffff", bg="#061e41")
+                v_name.place(x=195, y=230)
+                v_lab_result = tk.Label(activity_frame, text=lab_result, font=("Open Sans ExtraBold", 20), fg="#ffffff", bg="#061e41")
+                v_lab_result.place(x=255, y=270)
+        lrt_id = tk.Label(activity_frame, text="Patient Id -", font=("Open Sans ExtraBold", 20), bg="#061e41",fg="#ffffff")
+        lrt_id.place(x=90, y=190)
+        lrt_name = tk.Label(activity_frame, text="Name -", font=("Open Sans ExtraBold", 20), bg="#061e41", fg="#ffffff")
+        lrt_name.place(x=90, y=230)
+        lrt_lab_result = tk.Label(activity_frame, text="Lab Result -", font=("Open Sans ExtraBold", 20),bg="#061e41", fg="#ffffff")
+        lrt_lab_result.place(x=90, y=270)
+        lrt_back = tk.Button(activity_frame, text="Back", font=("Open Sans ExtraBold", 20), width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff", activebackground="#061e41",activeforeground="#ffffff", relief="flat", bd=0, highlightthickness=0,command=access_patient_records)
+        lrt_back.place(x=60, y=390)
+
+
+        enter_submit = tk.Button(activity_frame, text="➜", font=("Open Sans ExtraBold", 30), bg="#ffffff", fg="#061e41",activeforeground="#ffffff", activebackground="#061e41", bd=0, highlightthickness=0,relief='flat', command=grab_submit)
+        enter_submit.place(x=610, y=130, width=50, height=51)
+
     def access_patient_records():
         clear_the_activity_frame()
         a_header = tk.Label(activity_frame, text="Access patient records", font=("Open Sans ExtraBold", 30), background="#061e41", fg="#ffffff")
@@ -236,7 +296,7 @@ def lab_technician_form(root, panel_left, panel_right):
         a_button2.place(x=centered_x, y=200)
         a_button3 = tk.Button(activity_frame, text="Past Health History", font=("Open Sans ExtraBold", 20), fg="#061e41", bg="#ffffff", activebackground="#061e41", activeforeground="#ffffff", width=48, bd=0, highlightthickness=0, command=past_health_history)
         a_button3.place(x=centered_x, y=290)
-        a_button4 = tk.Button(activity_frame, text="Lab Test Results", font=("Open Sans ExtraBold", 20), fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", width=48, bd=0, highlightthickness=0)
+        a_button4 = tk.Button(activity_frame, text="Lab Test Results", font=("Open Sans ExtraBold", 20), fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", width=48, bd=0, highlightthickness=0, command=lab_test_results)
         a_button4.place(x=centered_x, y=380)
     access_patient_records()
 

@@ -48,6 +48,7 @@ def installing_database():
     explanation TEXT,
     current_illness TEXT,
     patients_explanation TEXT)""")
+    #cursor.execute("UPDATE existed_patient SET lab_test_result = ? WHERE patient_id = ?", ("Hemoglobin = 39g/dl", 15))
     #Admin
     cursor.execute("""CREATE TABLE IF NOT EXISTS admin(
     name TEXT PRIMARY KEY,
