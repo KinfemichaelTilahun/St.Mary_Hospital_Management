@@ -1,6 +1,4 @@
 import tkinter as tk
-from tkinter.font import names
-
 from db import database
 from tkinter import messagebox, Button
 import sqlite3
@@ -37,6 +35,7 @@ def lab_technician_form(root, panel_left, panel_right):
     main_menu_label = tk.Label(main_menu_frame, text="Main Menu", font=("Open Sans ExtraBold", 35), fg="#ffffff", bg="#061e41")
     main_menu_label.place(y=30, x=30)
 
+    #access patient record elements
     def clear_the_activity_frame():
         for usages in activity_frame.winfo_children():
             usages.place_forget()
@@ -284,6 +283,7 @@ def lab_technician_form(root, panel_left, panel_right):
         enter_submit = tk.Button(activity_frame, text="➜", font=("Open Sans ExtraBold", 30), bg="#ffffff", fg="#061e41",activeforeground="#ffffff", activebackground="#061e41", bd=0, highlightthickness=0,relief='flat', command=grab_submit)
         enter_submit.place(x=610, y=130, width=50, height=51)
 
+    #Main Access patient record buttons place
     def access_patient_records():
         clear_the_activity_frame()
         a_header = tk.Label(activity_frame, text="Access patient records", font=("Open Sans ExtraBold", 30), background="#061e41", fg="#ffffff")
@@ -300,11 +300,36 @@ def lab_technician_form(root, panel_left, panel_right):
         a_button4.place(x=centered_x, y=380)
     access_patient_records()
 
+    #Update patient element
+    def blood_test():
+        clear_the_activity_frame()
+        b_header = tk.Label(activity_frame, text="Blood Test Update", font=("Open Sans ExtraBold", 30), background="#061e41", fg="#ffffff")
+        b_header.place(relx=0.5, y=40, anchor="center")
+        enter_text = tk.Label(activity_frame, text="Enter the patient id", font=("Open Sans ExtraBold", 25), bg="#061e41", fg="#ffffff")
+        enter_text.place(relx=0.5, y=100, anchor="center")
+        enter_id_placeholder = "         Patient Id"
+        enter_id = tk.Entry(activity_frame, bg="#ffffff", fg="grey", relief="flat", font=("Open Sans ExtraBold", 25))
+        enter_id.insert(0, enter_id_placeholder)
+
+        def enter_id_click(event):
+            if enter_id.get() == enter_id_placeholder:
+                enter_id.delete(0, tk.END)
+                enter_id.config(fg="#061e41")
+
+        def enter_id_non_click(event):
+            if enter_id.get() == "":
+                enter_id.insert(0, enter_id_placeholder)
+                enter_id.config(fg="grey")
+
+        enter_id.bind("<FocusIn>", enter_id_click)
+        enter_id.bind("<FocusOut>", enter_id_non_click)
+        enter_id.place(width=root.winfo_screenwidth() // 4, relx=0.5, y=170, anchor="center")
+    #Main Update patient lab result button place
     def update_patient_lab_result():
         clear_the_activity_frame()
         u_header = tk.Label(activity_frame, text="Update Patient Lab Result", font=("Open Sans ExtraBold",30), bg="#061e41", fg="#ffffff")
         u_header.place(x=216, y=15)
-        u_button1 = tk.Button(activity_frame, text="Blood Test", font=("Open Sans ExtraBold", 20), fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", width=48, highlightthickness=0, bd=0)
+        u_button1 = tk.Button(activity_frame, text="Blood Test", font=("Open Sans ExtraBold", 20), fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", width=48, highlightthickness=0, bd=0, command=blood_test)
         centering_x = root.winfo_screenwidth()/1.5
         centered_x = (centering_x - u_button1.winfo_width()) // 20
         u_button1.place(x=centered_x, y=110)
