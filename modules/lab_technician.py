@@ -300,16 +300,44 @@ def lab_technician_form(root, panel_left, panel_right):
         a_button4.place(x=centered_x, y=380)
     access_patient_records()
 
-    #Update patient element
-    def blood_test():
+    #Main Update patient lab
+    def update_patient_lab_result():
         clear_the_activity_frame()
-        b_header = tk.Label(activity_frame, text="Blood Test Update", font=("Open Sans ExtraBold", 30), background="#061e41", fg="#ffffff")
-        b_header.place(relx=0.5, y=40, anchor="center")
+        u_header = tk.Label(activity_frame, text="Update Patient Lab Result", font=("Open Sans ExtraBold", 30),background="#061e41", fg="#ffffff")
+        u_header.place(relx=0.5, y=40, anchor="center")
         enter_text = tk.Label(activity_frame, text="Enter the patient id", font=("Open Sans ExtraBold", 25), bg="#061e41", fg="#ffffff")
         enter_text.place(relx=0.5, y=100, anchor="center")
         enter_id_placeholder = "         Patient Id"
         enter_id = tk.Entry(activity_frame, bg="#ffffff", fg="grey", relief="flat", font=("Open Sans ExtraBold", 25))
         enter_id.insert(0, enter_id_placeholder)
+
+        def grab_submit():
+            id_no = enter_id.get()
+            conn = sqlite3.connect("../db/database_storage.db")
+            cursor = conn.cursor()
+            cursor.execute("SELECT patient_id, name, gender, lab_test_result FROM existed_patient WHERE patient_id = ?", (id_no,))
+            p_result = cursor.fetchone()
+            if id_no == enter_id_placeholder or id_no == "":
+                messagebox.showwarning("Input Error", "Please enter ID number.")
+                return
+            if p_result:
+                patient_id = p_result[0]
+                name = p_result[1]
+                gender = p_result[2]
+                lab_test_result = p_result[3]
+                v_patient_id = tk.Label(activity_frame, text=patient_id, font=("Open Sans ExtraBold", 20), fg="#ffffff", bg="#061e41")
+                v_patient_id.place(x=225, y=250)
+                v_name = tk.Label(activity_frame, text=name, font=("Open Sans ExtraBold", 20), fg="#ffffff", bg="#061e41")
+                v_name.place(x=175, y=290)
+                v_gender = tk.Label(activity_frame, text=gender, font=("Open Sans ExtraBold", 20), fg="#ffffff", bg="#061e41")
+                v_gender.place(x=193, y=330)
+                v_phone_number = tk.Label(activity_frame, text=lab_test_result, font=("Open Sans ExtraBold", 20), fg="#ffffff", bg="#061e41")
+                v_phone_number.place(x=237, y=370)
+            else:
+                messagebox.showwarning("Error", "Please provide a valid ID number.")
+
+        enter_submit= tk.Button(activity_frame, text="➜", font=("Open Sans ExtraBold", 30), bg="#ffffff", fg="#061e41", activeforeground="#ffffff", activebackground="#061e41", bd=0, highlightthickness=0, relief='flat', command=grab_submit)
+        enter_submit.place(x=635, y=145, width=50, height=51)
 
         def enter_id_click(event):
             if enter_id.get() == enter_id_placeholder:
@@ -323,23 +351,37 @@ def lab_technician_form(root, panel_left, panel_right):
 
         enter_id.bind("<FocusIn>", enter_id_click)
         enter_id.bind("<FocusOut>", enter_id_non_click)
-        enter_id.place(width=root.winfo_screenwidth() // 4, relx=0.5, y=170, anchor="center")
-    #Main Update patient lab result button place
-    def update_patient_lab_result():
-        clear_the_activity_frame()
-        u_header = tk.Label(activity_frame, text="Update Patient Lab Result", font=("Open Sans ExtraBold",30), bg="#061e41", fg="#ffffff")
-        u_header.place(x=216, y=15)
-        u_button1 = tk.Button(activity_frame, text="Blood Test", font=("Open Sans ExtraBold", 20), fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", width=48, highlightthickness=0, bd=0, command=blood_test)
-        centering_x = root.winfo_screenwidth()/1.5
-        centered_x = (centering_x - u_button1.winfo_width()) // 20
-        u_button1.place(x=centered_x, y=110)
-        u_button2 = tk.Button(activity_frame, text="Urine Test", font=("Open Sans ExtraBold", 20), fg="#061e41", bg="#ffffff", activebackground="#061e41", activeforeground="#ffffff", width=48, highlightthickness=0, bd=0)
-        u_button2.place(x=centered_x, y=200)
-        u_button3 = tk.Button(activity_frame, text="Genetic Test", font=("Open Sans ExtraBold",20), fg="#061e41", bg="#ffffff", activebackground="#061e41", activeforeground="#ffffff", width=48, highlightthickness=0, bd=0)
-        u_button3.place(x=centered_x, y=290)
-        u_button4 = tk.Button(activity_frame, text="Vitamin D Test", font=("Open Sans ExtraBold", 20), fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", width=48, highlightthickness=0, bd=0)
-        u_button4.place(x=centered_x, y=380)
 
+        enter_id.place(width=root.winfo_screenwidth() // 4, relx=0.5, y=170, anchor="center")
+        label = tk.Label(activity_frame, text="Current result", font=("Open Sans ExtraBold", 23), bg="#061e41",fg="#ffffff")
+        label.place(x=70, y=200)
+        p_id = tk.Label(activity_frame, text="Patient Id -", font=("Open Sans ExtraBold", 20), bg="#061e41",fg="#ffffff")
+        p_id.place(x=70, y=250)
+        p_name = tk.Label(activity_frame, text="Name -", font=("Open Sans ExtraBold", 20), bg="#061e41", fg="#ffffff")
+        p_name.place(x=70, y=290)
+        p_gender = tk.Label(activity_frame, text="Gender -", font=("Open Sans ExtraBold", 20), fg="#ffffff",bg="#061e41")
+        p_gender.place(x=70, y=330)
+        p_ph = tk.Label(activity_frame, text="Lab Result -", font=("Open Sans ExtraBold", 20), bg="#061e41",fg="#ffffff")
+        p_ph.place(x=70, y=370)
+        label = tk.Label(activity_frame, text="Update The Result", font=("Open Sans ExtraBold", 23), bg="#061e41",fg="#ffffff")
+        label.place(x=550, y=200)
+        entry=tk.Entry(activity_frame, font=("Open Sans ExtraBold",25), relief='flat')
+        entry.place(x=550, y=250, width=root.winfo_screenwidth() // 4)
+        entry_placeholder = "         New Result"
+        entry.insert(0, entry_placeholder)
+
+        def entry_click(event):
+            if entry.get() == entry_placeholder:
+                entry.delete(0, tk.END)
+                entry.config(fg="#061e41")
+
+        def entry_non_click(event):
+            if entry.get() == "":
+                entry.insert(0, entry_placeholder)
+                entry.config(fg="grey")
+
+        entry.bind("<FocusIn>", entry_click)
+        entry.bind("<FocusOut>", entry_non_click)
 
     main_menu_button1 = tk.Button(main_menu_frame, text=f"Access patient \n records", font=("Open Sans ExtraBold", 25), width=root.winfo_screenwidth()//93, fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=access_patient_records)
     main_menu_button1.place(x=20, y=130)
