@@ -365,7 +365,7 @@ def lab_technician_form(root, panel_left, panel_right):
         p_ph.place(x=70, y=370)
         label = tk.Label(activity_frame, text="Update The Result", font=("Open Sans ExtraBold", 23), bg="#061e41",fg="#ffffff")
         label.place(x=550, y=200)
-        entry=tk.Entry(activity_frame, font=("Open Sans ExtraBold",25), relief='flat')
+        entry=tk.Entry(activity_frame, font=("Open Sans ExtraBold",25), relief='flat', fg="Grey")
         entry.place(x=550, y=250, width=root.winfo_screenwidth() // 4)
         entry_placeholder = "         New Result"
         entry.insert(0, entry_placeholder)
@@ -382,6 +382,17 @@ def lab_technician_form(root, panel_left, panel_right):
 
         entry.bind("<FocusIn>", entry_click)
         entry.bind("<FocusOut>", entry_non_click)
+        def submit_new_result():
+            info = entry.get()
+            id = enter_id.get()
+            conn = sqlite3.connect("../db/database_storage.db")
+            cursor = conn.cursor()
+            cursor.execute("UPDATE existed_patient SET lab_test_result = ? WHERE patient_id = ?", (info, id))
+            conn.commit()
+            conn.close()
+
+        submit_button = tk.Button(activity_frame, text="Submit", font=("Open Sans ExtraBold", 20), width=root.winfo_screenwidth()//85, fg="#061e41", bg="#ffffff", activebackground="#061e41", activeforeground="#ffffff", relief="flat", bd=0, highlightthickness=0, command= submit_new_result)
+        submit_button.place(x=585, y=320)
 
     main_menu_button1 = tk.Button(main_menu_frame, text=f"Access patient \n records", font=("Open Sans ExtraBold", 25), width=root.winfo_screenwidth()//93, fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=access_patient_records)
     main_menu_button1.place(x=20, y=130)

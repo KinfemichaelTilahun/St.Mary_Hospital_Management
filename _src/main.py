@@ -160,7 +160,7 @@ def handel_login():
 #Login buttons
 login_submit_button = tk.Button(panel_left, text='Submit', relief='flat', font=('Open Sans ExtraBold',20), bd=0, bg="#ffffff", fg="#061e41", activebackground="#061e41", activeforeground="#ffffff", highlightthickness=0, padx=20, command=handel_login)
 login_submit_button.place(x=panel_width//2.6, y= 470)
-Login_anchor_button = tk.Button(panel_left, text='New Patient? Create an account here', font=("open sans ExtraBold", 20), bd=0, bg="#061e41", fg="#ffffff", activebackground="#061e41", activeforeground="#ffffff", highlightthickness=0, command=lab_technician)
+Login_anchor_button = tk.Button(panel_left, text='New Patient? Create an account here', font=("open sans ExtraBold", 20), bd=0, bg="#061e41", fg="#ffffff", activebackground="#061e41", activeforeground="#ffffff", highlightthickness=0, command=new_patient_handler)
 Login_anchor_button.place(x=panel_width//8, y= 580)
 
 #Tkinter Loop
