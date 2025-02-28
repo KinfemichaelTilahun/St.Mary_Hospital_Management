@@ -1,9 +1,6 @@
 import tkinter as tk
-from db import database
-from tkinter import messagebox, Button
+from tkinter import messagebox
 import sqlite3
-
-
 
 def lab_technician_form(root, panel_left, panel_right):
     panel_left.pack_forget()
@@ -382,14 +379,41 @@ def lab_technician_form(root, panel_left, panel_right):
 
         entry.bind("<FocusIn>", entry_click)
         entry.bind("<FocusOut>", entry_non_click)
+
         def submit_new_result():
-            info = entry.get()
-            id = enter_id.get()
+            id_no = enter_id.get()
             conn = sqlite3.connect("../db/database_storage.db")
             cursor = conn.cursor()
-            cursor.execute("UPDATE existed_patient SET lab_test_result = ? WHERE patient_id = ?", (info, id))
-            conn.commit()
-            conn.close()
+            cursor.execute(
+                "SELECT patient_id, name, gender, phone_number, address FROM existed_patient WHERE patient_id = ?",
+                (id_no,))
+            p_result = cursor.fetchone()
+            if id_no == enter_id_placeholder or id_no == "":
+                messagebox.showwarning("Input Error", "Please enter ID number.")
+                return
+            if p_result:
+                patient_id = p_result[0]
+                name = p_result[1]
+                gender = p_result[2]
+                phone_number = p_result[3]
+                address = p_result[4]
+                v_patient_id = tk.Label(activity_frame, text=patient_id, font=("Open Sans ExtraBold", 20), fg="#ffffff",
+                                        bg="#061e41")
+                v_patient_id.place(x=245, y=180)
+                v_name = tk.Label(activity_frame, text=name, font=("Open Sans ExtraBold", 20), fg="#ffffff",
+                                  bg="#061e41")
+                v_name.place(x=195, y=220)
+                v_gender = tk.Label(activity_frame, text=gender, font=("Open Sans ExtraBold", 20), fg="#ffffff",
+                                    bg="#061e41")
+                v_gender.place(x=213, y=260)
+                v_phone_number = tk.Label(activity_frame, text=phone_number, font=("Open Sans ExtraBold", 20),
+                                          fg="#ffffff", bg="#061e41")
+                v_phone_number.place(x=320, y=300)
+                v_address = tk.Label(activity_frame, text=address, font=("Open Sans ExtraBold", 20), fg="#ffffff",
+                                     bg="#061e41")
+                v_address.place(x=222, y=340)
+            else:
+                messagebox.showwarning("Error", "Please provide a valid ID number.")
 
         submit_button = tk.Button(activity_frame, text="Submit", font=("Open Sans ExtraBold", 20), width=root.winfo_screenwidth()//85, fg="#061e41", bg="#ffffff", activebackground="#061e41", activeforeground="#ffffff", relief="flat", bd=0, highlightthickness=0, command= submit_new_result)
         submit_button.place(x=585, y=320)
