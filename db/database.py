@@ -22,7 +22,7 @@ def installing_database():
     cursor.execute("""CREATE TABLE IF NOT EXISTS pharmacist (
     name TEXT PRIMARY KEY,
     password TEXT)""")
-    #cursor.execute("INSERT INTO pharmacist (name, password) VALUES (?,?)", ("Able","12345"))
+    #cursor.execute("INSERT INTO pharmacist (name, password) VALUES (?,?)", ("1","1"))
 
     #Lab Technician
     cursor.execute("""CREATE TABLE IF NOT EXISTS lab_technician (
@@ -48,7 +48,7 @@ def installing_database():
     explanation TEXT,
     current_illness TEXT,
     patients_explanation TEXT)""")
-    #cursor.execute("UPDATE existed_patient SET lab_test_result = ? WHERE patient_id = ?", ("Hemoglobin = 39g/dl", 15))
+    cursor.execute("UPDATE existed_patient SET verification = ? WHERE patient_id = ?", ("TEST", 15))
     #Admin
     cursor.execute("""CREATE TABLE IF NOT EXISTS admin(
     name TEXT PRIMARY KEY,

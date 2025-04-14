@@ -300,7 +300,7 @@ def pharmacist_form(root, panel_left, panel_right):
     #Verify Work Space
     def verify_medication():
         clear_the_activity_frame()
-        m_header = tk.Label(activity_frame, text="Medication History", font=("Open Sans ExtraBold", 30),background="#061e41", fg="#ffffff")
+        m_header = tk.Label(activity_frame, text="Verify Medication", font=("Open Sans ExtraBold", 30),background="#061e41", fg="#ffffff")
         m_header.place(x=255, y=15)
         enter_text = tk.Label(activity_frame, text="Enter the patient id", font=("Open Sans ExtraBold", 25),bg="#061e41", fg="#ffffff")
         enter_text.place(x=285, y=75)
@@ -327,7 +327,7 @@ def pharmacist_form(root, panel_left, panel_right):
             id_no = enter_id.get()
             conn = sqlite3.connect("../db/database_storage.db")
             cursor = conn.cursor()
-            cursor.execute("SELECT patient_id, name, medication FROM existed_patient WHERE patient_id = ?", (id_no,))
+            cursor.execute("SELECT patient_id, name, medication, current_illness, verification FROM existed_patient WHERE patient_id = ?", (id_no,))
             m_result = cursor.fetchone()
             if id_no == enter_id_placeholder or id_no == "":
                 messagebox.showwarning("Input Error", "Please enter ID number.")
@@ -335,29 +335,56 @@ def pharmacist_form(root, panel_left, panel_right):
             if m_result:
                 patient_id = m_result[0]
                 name = m_result[1]
-                gender = m_result[2]
+                medication = m_result[2]
+                current_illness= m_result[3]
+                verification= m_result[4]
                 v_patient_id = tk.Label(activity_frame, text=patient_id, font=("Open Sans ExtraBold", 20), fg="#ffffff",bg="#061e41")
-                v_patient_id.place(x=245, y=190)
+                v_patient_id.place(x=245, y=180)
                 v_name = tk.Label(activity_frame, text=name, font=("Open Sans ExtraBold", 20), fg="#ffffff",bg="#061e41")
-                v_name.place(x=195, y=230)
-                v_medication = tk.Label(activity_frame, text=gender, font=("Open Sans ExtraBold", 20), fg="#ffffff",bg="#061e41")
-                v_medication.place(x=269, y=270)
+                v_name.place(x=195, y=220)
+                v_current_illness = tk.Label(activity_frame, text=current_illness, font=("Open Sans ExtraBold", 20), fg="#ffffff",bg="#061e41")
+                v_current_illness.place(x=319, y=260)
+                v_medication = tk.Label(activity_frame, text=medication, font=("Open Sans ExtraBold", 20), fg="#ffffff",bg="#061e41")
+                v_medication.place(x=269, y=300)
+                v_verification = tk.Label(activity_frame, text=verification, font=("Open Sans ExtraBold", 20), fg="#ffffff", bg="#061e41")
+                v_verification.place(x=275, y=340)
             else:
                 messagebox.showwarning("Error", "Please provide a valid ID number.")
 
         enter_submit = tk.Button(activity_frame, text="➜", font=("Open Sans ExtraBold", 30), bg="#ffffff", fg="#061e41",activeforeground="#ffffff", activebackground="#061e41", bd=0, highlightthickness=0,relief='flat', command=grab_submit)
         enter_submit.place(x=610, y=130, width=50, height=51)
         m_id = tk.Label(activity_frame, text="Patient Id -", font=("Open Sans ExtraBold", 20), bg="#061e41", fg="#ffffff")
-        m_id.place(x=90, y=190)
+        m_id.place(x=90, y=180)
         m_name = tk.Label(activity_frame, text="Name -", font=("Open Sans ExtraBold", 20), bg="#061e41", fg="#ffffff")
-        m_name.place(x=90, y=230)
-        m_medication = tk.Label(activity_frame, text="Medication -", font=("Open Sans ExtraBold", 20), bg="#061e41", fg="#ffffff")
-        m_medication.place(x=90, y=270)
+        m_name.place(x=90, y=220)
+        m_current_illness = tk.Label(activity_frame, text="Current Illness -", font=("Open Sans ExtraBold", 20), bg="#061e41", fg="#ffffff")
+        m_current_illness.place(x=90, y=260)
+        m_medication = tk.Label(activity_frame, text="Medication -", font=("Open Sans ExtraBold", 20),bg="#061e41", fg="#ffffff")
+        m_medication.place(x=90, y=300)
+        m_verification = tk.Label(activity_frame, text="Verification -", font=("Open Sans ExtraBold", 20), bg="#061e41", fg="#ffffff")
+        m_verification.place(x=90, y=340)
 
-        m_verified = tk.Button(activity_frame, text="Verified", font=("Open Sans ExtraBold", 20),width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff", activebackground="#061e41",activeforeground="#ffffff", relief="flat", bd=0, highlightthickness=0,command=access_patient_records)
-        m_verified.place(x=60, y=390)
-        m_not_verified = tk.Button(activity_frame, text="Not Verified", font=("Open Sans ExtraBold", 20), width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff", activebackground="#061e41",activeforeground="#ffffff", relief="flat", bd=0, highlightthickness=0,command=access_patient_records)
-        m_not_verified.place(x=60, y=390)
+        def verified():
+            id_no = enter_id.get()
+            conn = sqlite3.connect("../db/database_storage.db")
+            cursor = conn.cursor()
+            cursor.execute("UPDATE existed_patient SET verification = ? WHERE patient_id = ?", ("Verified", id_no))
+            conn.commit()
+            conn.close()
+
+        def not_verified():
+            id_no = enter_id.get()
+            conn = sqlite3.connect("../db/database_storage.db")
+            cursor = conn.cursor()
+            cursor.execute("UPDATE existed_patient SET verification = ? WHERE patient_id = ?", ("Not Verified", id_no))
+            conn.commit()
+            conn.close()
+
+
+        m_verified = tk.Button(activity_frame, text="Verified", font=("Open Sans ExtraBold", 20),width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff", activebackground="#061e41",activeforeground="#ffffff", relief="flat", bd=0, highlightthickness=0,command=verified)
+        m_verified.place(x=600, y=320)
+        m_not_verified = tk.Button(activity_frame, text="Not Verified", font=("Open Sans ExtraBold", 20), width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff", activebackground="#061e41",activeforeground="#ffffff", relief="flat", bd=0, highlightthickness=0,command=not_verified)
+        m_not_verified.place(x=600, y=390)
 
         m_back = tk.Button(activity_frame, text="Back", font=("Open Sans ExtraBold", 20),width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff", activebackground="#061e41", activeforeground="#ffffff", relief="flat", bd=0, highlightthickness=0,command=access_patient_records)
         m_back.place(x=60, y=390)
@@ -366,3 +393,5 @@ def pharmacist_form(root, panel_left, panel_right):
     main_menu_button1.place(x=20, y=130)
     main_menu_button2 = tk.Button(main_menu_frame, text=f"Verify \n medication", font=("Open Sans ExtraBold", 25), width=root.winfo_screenwidth() // 93, fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=verify_medication)
     main_menu_button2.place(x=20, y=270)
+    main_menu_button3 = tk.Button(main_menu_frame, text=f"Explain \n medication", font=("Open Sans ExtraBold", 25),width=root.winfo_screenwidth() // 93, fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=verify_medication)
+    main_menu_button3.place(x=20, y=410)
