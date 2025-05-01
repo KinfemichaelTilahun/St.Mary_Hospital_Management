@@ -389,9 +389,105 @@ def pharmacist_form(root, panel_left, panel_right):
         m_back = tk.Button(activity_frame, text="Back", font=("Open Sans ExtraBold", 20),width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff", activebackground="#061e41", activeforeground="#ffffff", relief="flat", bd=0, highlightthickness=0,command=access_patient_records)
         m_back.place(x=60, y=390)
 
+    def explain_medication():
+        clear_the_activity_frame()
+        m_header = tk.Label(activity_frame, text="Explain Medication", font=("Open Sans ExtraBold", 30), bg="#061e41",fg="#ffffff")
+        m_header.place(x=255, y=15)
+        enter_text = tk.Label(activity_frame, text="Enter the patient id", font=("Open Sans ExtraBold", 25),bg="#061e41", fg="#ffffff")
+        enter_text.place(x=285, y=75)
+        enter_id_placeholder1 = "         Patient Id"
+
+        enter_id1 = tk.Entry(activity_frame, bg="#ffffff", fg="grey", relief="flat", font=("Open Sans ExtraBold", 25))
+        enter_id1.insert(0, enter_id_placeholder1)
+
+        def enter_id_click1(event):
+            if enter_id1.get() == enter_id_placeholder1:
+                enter_id1.delete(0, tk.END)
+                enter_id1.config(fg="#061e41")
+
+        def enter_id_non_click1(event):
+            if enter_id1.get() == "":
+                enter_id1.insert(0, enter_id_placeholder1)
+                enter_id1.config(fg="grey")
+
+        enter_id1.bind("<FocusIn>", enter_id_click1)
+        enter_id1.bind("<FocusOut>", enter_id_non_click1)
+        enter_id1.place(width=root.winfo_screenwidth() // 4, x=285, y=130)
+
+        enter_text = tk.Label(activity_frame, text="Enter the Explanation", font=("Open Sans ExtraBold", 25), bg="#061e41", fg="#ffffff")
+        enter_text.place(x=268, y=185)
+
+        enter_id_placeholder = "                                      Explanation"
+
+        enter_id = tk.Entry(activity_frame, bg="#ffffff", fg="grey", relief="flat", font=("Open Sans ExtraBold", 20))
+        enter_id.insert(0, enter_id_placeholder)
+
+        def enter_id_click(event):
+            if enter_id.get() == enter_id_placeholder:
+                enter_id.delete(0, tk.END)
+                enter_id.config(fg="#061e41")
+
+        def enter_id_non_click(event):
+            if enter_id.get() == "":
+                enter_id.insert(0, enter_id_placeholder)
+                enter_id.config(fg="grey")
+
+        enter_id.bind("<FocusIn>", enter_id_click)
+        enter_id.bind("<FocusOut>", enter_id_non_click)
+        enter_id.place(width=root.winfo_screenwidth() // 2, height=130 ,x=(root.winfo_screenwidth()//1.5)//8, y=240)
+
+        def submit():
+            try:
+                patient_id=enter_id1.get()
+                explanation=enter_id.get()
+
+                if patient_id == "" or patient_id == enter_id_placeholder1 or explanation == "" or explanation == enter_id_placeholder:
+                    messagebox.showwarning("Missing Information","All fields must be filled in completely.")
+                    return
+
+                conn = sqlite3.connect("../db/database_storage.db")
+                cursor = conn.cursor()
+                cursor.execute("SELECT * FROM existed_patient WHERE patient_id = ?",(patient_id,))
+                result = cursor.fetchone()
+
+                if result is None:
+                    messagebox.showwarning("Invalid ID","The Patient Id you entered does not exist!")
+                    return
+
+                cursor.execute("UPDATE existed_patient SET explanation = ? WHERE patient_id = ?", (explanation, patient_id))
+                messagebox.showinfo("Sent!", "The explanation has been sent successfully!")
+                conn.commit()
+                conn.close()
+
+            except Exception as e:
+                messagebox.showwarning("Error", f"{e}")
+
+        submit = tk.Button(activity_frame, text="submit", font=("Open Sans ExtraBold", 20),width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff",activebackground="#061e41", activeforeground="#ffffff", relief="flat", bd=0,highlightthickness=0, command=submit)
+        submit.place(x=580, y=390)
+        lrt_back = tk.Button(activity_frame, text="Back", font=("Open Sans ExtraBold", 20), width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff",activebackground="#061e41", activeforeground="#ffffff", relief="flat", bd=0,highlightthickness=0, command=access_patient_records)
+        lrt_back.place(x=60, y=390)
+
     main_menu_button1 = tk.Button(main_menu_frame, text=f"Access patient \n records", font=("Open Sans ExtraBold", 25), width=root.winfo_screenwidth() // 93, fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=access_patient_records)
     main_menu_button1.place(x=20, y=130)
     main_menu_button2 = tk.Button(main_menu_frame, text=f"Verify \n medication", font=("Open Sans ExtraBold", 25), width=root.winfo_screenwidth() // 93, fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=verify_medication)
     main_menu_button2.place(x=20, y=270)
-    main_menu_button3 = tk.Button(main_menu_frame, text=f"Explain \n medication", font=("Open Sans ExtraBold", 25),width=root.winfo_screenwidth() // 93, fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=verify_medication)
+    main_menu_button3 = tk.Button(main_menu_frame, text=f"Explain \n medication", font=("Open Sans ExtraBold", 25),width=root.winfo_screenwidth() // 93, fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=explain_medication)
     main_menu_button3.place(x=20, y=410)
+
+    def next_fun():
+        main_menu_button_back.place(x=31, y=130)
+        main_menu_button1.place_forget()
+        main_menu_button2.place_forget()
+        main_menu_button3.place_forget()
+        main_menu_button_next.place_forget()
+
+    def back_fun():
+        main_menu_button_back.place_forget()
+        main_menu_button1.place(x=20, y=130)
+        main_menu_button2.place(x=20, y=270)
+        main_menu_button3.place(x=20, y=410)
+        main_menu_button_next.place(x=31, y=540)
+
+    main_menu_button_next = tk.Button(main_menu_frame, text=f"Next", font=("Open Sans ExtraBold", 19),width=root.winfo_screenwidth() // 80, fg="#061e41", bg="#ffffff",activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0,bd=0, command=next_fun)
+    main_menu_button_next.place(x=31, y=540)
+    main_menu_button_back = tk.Button(main_menu_frame, text=f"Back", font=("Open Sans ExtraBold", 19),width=root.winfo_screenwidth() // 80, fg="#061e41", bg="#ffffff",activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0,bd=0, command=back_fun)
