@@ -303,7 +303,7 @@ def pharmacist_form(root, panel_left, panel_right):
         m_header = tk.Label(activity_frame, text="Verify Medication", font=("Open Sans ExtraBold", 30),background="#061e41", fg="#ffffff")
         m_header.place(x=255, y=15)
         enter_text = tk.Label(activity_frame, text="Enter the patient id", font=("Open Sans ExtraBold", 25),bg="#061e41", fg="#ffffff")
-        enter_text.place(x=285, y=75)
+        enter_text.place(x=285, y=73)
         enter_id_placeholder = "         Patient Id"
 
         enter_id = tk.Entry(activity_frame, bg="#ffffff", fg="grey", relief="flat", font=("Open Sans ExtraBold", 25))
@@ -321,7 +321,7 @@ def pharmacist_form(root, panel_left, panel_right):
 
         enter_id.bind("<FocusIn>", enter_id_click)
         enter_id.bind("<FocusOut>", enter_id_non_click)
-        enter_id.place(width=root.winfo_screenwidth() // 4, x=260, y=130)
+        enter_id.place(width=root.winfo_screenwidth() // 4, x=260, y=128)
 
         def grab_submit():
             id_no = enter_id.get()
@@ -352,7 +352,7 @@ def pharmacist_form(root, panel_left, panel_right):
                 messagebox.showwarning("Error", "Please provide a valid ID number.")
 
         enter_submit = tk.Button(activity_frame, text="➜", font=("Open Sans ExtraBold", 30), bg="#ffffff", fg="#061e41",activeforeground="#ffffff", activebackground="#061e41", bd=0, highlightthickness=0,relief='flat', command=grab_submit)
-        enter_submit.place(x=610, y=130, width=50, height=51)
+        enter_submit.place(x=610, y=128, width=50, height=51)
         m_id = tk.Label(activity_frame, text="Patient Id -", font=("Open Sans ExtraBold", 20), bg="#061e41", fg="#ffffff")
         m_id.place(x=90, y=180)
         m_name = tk.Label(activity_frame, text="Name -", font=("Open Sans ExtraBold", 20), bg="#061e41", fg="#ffffff")
@@ -382,12 +382,9 @@ def pharmacist_form(root, panel_left, panel_right):
 
 
         m_verified = tk.Button(activity_frame, text="Verified", font=("Open Sans ExtraBold", 20),width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff", activebackground="#061e41",activeforeground="#ffffff", relief="flat", bd=0, highlightthickness=0,command=verified)
-        m_verified.place(x=600, y=320)
+        m_verified.place(x=100, y=390)
         m_not_verified = tk.Button(activity_frame, text="Not Verified", font=("Open Sans ExtraBold", 20), width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff", activebackground="#061e41",activeforeground="#ffffff", relief="flat", bd=0, highlightthickness=0,command=not_verified)
-        m_not_verified.place(x=600, y=390)
-
-        m_back = tk.Button(activity_frame, text="Back", font=("Open Sans ExtraBold", 20),width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff", activebackground="#061e41", activeforeground="#ffffff", relief="flat", bd=0, highlightthickness=0,command=access_patient_records)
-        m_back.place(x=60, y=390)
+        m_not_verified.place(x=400, y=390)
 
     def explain_medication():
         clear_the_activity_frame()
@@ -463,9 +460,115 @@ def pharmacist_form(root, panel_left, panel_right):
                 messagebox.showwarning("Error", f"{e}")
 
         submit = tk.Button(activity_frame, text="submit", font=("Open Sans ExtraBold", 20),width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff",activebackground="#061e41", activeforeground="#ffffff", relief="flat", bd=0,highlightthickness=0, command=submit)
-        submit.place(x=580, y=390)
-        lrt_back = tk.Button(activity_frame, text="Back", font=("Open Sans ExtraBold", 20), width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff",activebackground="#061e41", activeforeground="#ffffff", relief="flat", bd=0,highlightthickness=0, command=access_patient_records)
-        lrt_back.place(x=60, y=390)
+        submit.place(x=300, y=390)
+
+    def update_medicine():
+        clear_the_activity_frame()
+        m_header = tk.Label(activity_frame, text="Update Medicine", font=("Open Sans ExtraBold", 30),background="#061e41", fg="#ffffff")
+        m_header.place(x=275, y=15)
+        enter_text = tk.Label(activity_frame, text="Enter the patient id", font=("Open Sans ExtraBold", 25),bg="#061e41", fg="#ffffff")
+        enter_text.place(x=285, y=73)
+        enter_id_placeholder1 = "         Patient Id"
+
+        enter_id1 = tk.Entry(activity_frame, bg="#ffffff", fg="grey", relief="flat", font=("Open Sans ExtraBold", 25))
+        enter_id1.insert(0, enter_id_placeholder1)
+
+        def enter_id_click1(event):
+            if enter_id1.get() == enter_id_placeholder1:
+                enter_id1.delete(0, tk.END)
+                enter_id1.config(fg="#061e41")
+
+        def enter_id_non_click1(event):
+            if enter_id1.get() == "":
+                enter_id1.insert(0, enter_id_placeholder1)
+                enter_id1.config(fg="grey")
+
+        enter_id1.bind("<FocusIn>", enter_id_click1)
+        enter_id1.bind("<FocusOut>", enter_id_non_click1)
+        enter_id1.place(width=root.winfo_screenwidth() // 4, x=260, y=128)
+
+        def grab_submit():
+            id_no = enter_id1.get()
+            conn = sqlite3.connect("../db/database_storage.db")
+            cursor = conn.cursor()
+            cursor.execute("SELECT patient_id, name, medication, current_illness, verification FROM existed_patient WHERE patient_id = ?", (id_no,))
+            m_result = cursor.fetchone()
+            if id_no == enter_id_placeholder1 or id_no == "":
+                messagebox.showwarning("Input Error", "Please enter ID number.")
+                return
+            if m_result:
+                patient_id = m_result[0]
+                name = m_result[1]
+                medication = m_result[2]
+                v_patient_id = tk.Label(activity_frame, text=patient_id, font=("Open Sans ExtraBold", 20), fg="#ffffff",bg="#061e41")
+                v_patient_id.place(x=245, y=200)
+                v_name = tk.Label(activity_frame, text=name, font=("Open Sans ExtraBold", 20), fg="#ffffff",bg="#061e41")
+                v_name.place(x=195, y=240)
+                v_medication = tk.Label(activity_frame, text=medication, font=("Open Sans ExtraBold", 20), fg="#ffffff",bg="#061e41")
+                v_medication.place(x=385, y=280)
+            else:
+                messagebox.showwarning("Error", "Please provide a valid ID number.")
+
+        enter_submit = tk.Button(activity_frame, text="➜", font=("Open Sans ExtraBold", 30), bg="#ffffff", fg="#061e41",activeforeground="#ffffff", activebackground="#061e41", bd=0, highlightthickness=0,relief='flat', command=grab_submit)
+        enter_submit.place(x=610, y=128, width=50, height=51)
+
+        m_id = tk.Label(activity_frame, text="Patient Id -", font=("Open Sans ExtraBold", 20), bg="#061e41",fg="#ffffff")
+        m_id.place(x=90, y=200)
+        m_name = tk.Label(activity_frame, text="Name -", font=("Open Sans ExtraBold", 20), bg="#061e41", fg="#ffffff")
+        m_name.place(x=90, y=240)
+        m_medication = tk.Label(activity_frame, text="Current Medication -", font=("Open Sans ExtraBold", 20), bg="#061e41",fg="#ffffff")
+        m_medication.place(x=90, y=280)
+
+        enter_text2 = tk.Label(activity_frame, text="Enter the new medication", font=("Open Sans ExtraBold", 25),bg="#061e41", fg="#ffffff")
+        enter_text2.place(x=230, y=335)
+        enter_med_placeholder = "    New Medication"
+
+        enter_med = tk.Entry(activity_frame, bg="#ffffff", fg="grey", relief="flat", font=("Open Sans ExtraBold", 25))
+        enter_med.insert(0, enter_med_placeholder)
+
+        def enter_med_click(event):
+            if enter_med.get() == enter_med_placeholder:
+                enter_med.delete(0, tk.END)
+                enter_med.config(fg="#061e41")
+
+        def enter_med_non_click(event):
+            if enter_med.get() == "":
+                enter_med.insert(0, enter_med_placeholder)
+                enter_med.config(fg="grey")
+
+        enter_med.bind("<FocusIn>", enter_med_click)
+        enter_med.bind("<FocusOut>", enter_med_non_click)
+        enter_med.place(width=root.winfo_screenwidth() // 4, x=200, y=390)
+
+        def update():
+            id_no = enter_id1.get()
+
+            if id_no == "" or id_no == enter_id_placeholder1:
+                messagebox.showwarning("Missing Information", "Please check the current medication before you update!")
+                return
+
+            medication = enter_med.get()
+
+            if medication == "" or medication == enter_med_placeholder:
+                messagebox.showwarning("Missing Information", "Please enter the new medication!")
+                return
+
+            conn = sqlite3.connect("../db/database_storage.db")
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM existed_patient WHERE patient_id = ?", (id_no,))
+            result = cursor.fetchone()
+
+            if result is None:
+                messagebox.showwarning("Invalid ID", "The Patient Id you entered does not exist!")
+                return
+
+            cursor.execute("UPDATE existed_patient SET medication = ? WHERE patient_id = ?", (medication, id_no))
+            messagebox.showinfo("Update!", "The medication has been updated successfully!")
+            conn.commit()
+            conn.close()
+
+        update_submit = tk.Button(activity_frame, text="Update", font=("Open Sans ExtraBold", 30), bg="#ffffff", fg="#061e41",activeforeground="#ffffff", activebackground="#061e41", bd=0, highlightthickness=0,relief='flat', command=update)
+        update_submit.place(x=550, y=390, width=160, height=51)
 
     main_menu_button1 = tk.Button(main_menu_frame, text=f"Access patient \n records", font=("Open Sans ExtraBold", 25), width=root.winfo_screenwidth() // 93, fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=access_patient_records)
     main_menu_button1.place(x=20, y=130)
@@ -473,9 +576,11 @@ def pharmacist_form(root, panel_left, panel_right):
     main_menu_button2.place(x=20, y=270)
     main_menu_button3 = tk.Button(main_menu_frame, text=f"Explain \n medication", font=("Open Sans ExtraBold", 25),width=root.winfo_screenwidth() // 93, fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=explain_medication)
     main_menu_button3.place(x=20, y=410)
+    main_menu_button4 = tk.Button(main_menu_frame, text=f"Update \n medicine", font=("Open Sans ExtraBold", 25),width=root.winfo_screenwidth() // 93, fg="#061e41", bg="#ffffff",activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0,command=update_medicine)
 
     def next_fun():
         main_menu_button_back.place(x=31, y=130)
+        main_menu_button4.place(x=20, y=204)
         main_menu_button1.place_forget()
         main_menu_button2.place_forget()
         main_menu_button3.place_forget()
@@ -483,6 +588,7 @@ def pharmacist_form(root, panel_left, panel_right):
 
     def back_fun():
         main_menu_button_back.place_forget()
+        main_menu_button4.place_forget()
         main_menu_button1.place(x=20, y=130)
         main_menu_button2.place(x=20, y=270)
         main_menu_button3.place(x=20, y=410)
