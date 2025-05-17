@@ -48,11 +48,13 @@ def installing_database():
     explanation TEXT,
     current_illness TEXT,
     patients_explanation TEXT)""")
-    cursor.execute("UPDATE existed_patient SET verification = ? WHERE patient_id = ?", ("TEST", 15))
+    #cursor.execute("UPDATE existed_patient SET verification = ? WHERE patient_id = ?", ("TEST", 15))
     #Admin
     cursor.execute("""CREATE TABLE IF NOT EXISTS admin(
     name TEXT PRIMARY KEY,
     password TEXT)""")
+    #cursor.execute("INSERT INTO admin (name,password) VALUES (?,?)", ("2","2"))
+
 
     connection.commit()
     return connection, cursor

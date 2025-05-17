@@ -7,6 +7,7 @@ from tkinter import messagebox
 from modules.new_patient import new_patient_form
 from modules.lab_technician import lab_technician_form
 from modules.pharmacist import pharmacist_form
+from modules.admin import admin_form
 
 #Installing connection
 connection, cursor = database.installing_database()
@@ -30,9 +31,7 @@ def lab_technician():
     lab_technician_form(root, panel_left, panel_right)
 
 def admin():
-    from modules import admin
-    panel_left.pack_forget()
-    panel_right.pack_forget()
+    admin_form(root, panel_left, panel_right)
 
 def new_patient_handler():
     new_patient_form(root, panel_left, panel_right)
