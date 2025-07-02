@@ -37,6 +37,7 @@ def admin_form(root, panel_left, panel_right):
             usages.place_forget()
             usages.destroy()
 
+# Manage Doctor
     def add_doctor():
         clear_the_activity_frame()
         p_header = tk.Label(activity_frame, text="Add A Doctor", font=("Open Sans ExtraBold", 30),background="#061e41", fg="#ffffff")
@@ -171,6 +172,7 @@ def admin_form(root, panel_left, panel_right):
         a_button2.place(x=centered_x, y=200)
     manage_doctors()
 
+# Manage Pharmacist
     def add_pharmacist():
         clear_the_activity_frame()
         p_header = tk.Label(activity_frame, text="Add A Pharmacist", font=("Open Sans ExtraBold", 30),background="#061e41", fg="#ffffff")
@@ -306,11 +308,148 @@ def admin_form(root, panel_left, panel_right):
         a_button2 = tk.Button(activity_frame, text="Remove a Pharmacist", font=("Open Sans ExtraBold", 20), fg="#061e41",bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", width=48, bd=0,highlightthickness=0, command=remove_pharmacist)
         a_button2.place(x=centered_x, y=200)
 
+# Manage lab_technician
+    def add_lab_technician():
+        clear_the_activity_frame()
+        p_header = tk.Label(activity_frame, text="Add A Lab Technician", font=("Open Sans ExtraBold", 30),background="#061e41", fg="#ffffff")
+        p_header.place(x=210, y=15)
+        enter_text = tk.Label(activity_frame, text="Enter the Lab Technician's name", font=("Open Sans ExtraBold", 25),bg="#061e41", fg="#ffffff")
+        enter_text.place(x=155, y=65)
+        enter_id_placeholder = "Lab Technician's name"
+
+        enter_id = tk.Entry(activity_frame, bg="#ffffff", fg="grey", relief="flat", font=("Open Sans ExtraBold", 25))
+        enter_id.insert(0, enter_id_placeholder)
+
+        def enter_id_click(event):
+            if enter_id.get() == enter_id_placeholder:
+                enter_id.delete(0, tk.END)
+                enter_id.config(fg="#061e41")
+
+        def enter_id_non_click(event):
+            if enter_id.get() == "":
+                enter_id.insert(0, enter_id_placeholder)
+                enter_id.config(fg="grey")
+
+        enter_id.bind("<FocusIn>", enter_id_click)
+        enter_id.bind("<FocusOut>", enter_id_non_click)
+        enter_id.place(width=root.winfo_screenwidth() // 4, x=260, y=120)
+
+        enter_text2 = tk.Label(activity_frame, text="Enter the Lab Technician's password", font=("Open Sans ExtraBold", 25),bg="#061e41", fg="#ffffff")
+        enter_text2.place(x=140, y=200)
+        enter_id2_placeholder = "Lab Technician's password"
+
+        enter_id2 = tk.Entry(activity_frame, bg="#ffffff", fg="grey", relief="flat", font=("Open Sans ExtraBold", 25))
+        enter_id2.insert(0, enter_id2_placeholder)
+
+        def enter_id2_click(event):
+            if enter_id2.get() == enter_id2_placeholder:
+                enter_id2.delete(0, tk.END)
+                enter_id2.config(fg="#061e41")
+
+        def enter_id2_non_click(event):
+            if enter_id2.get() == "":
+                enter_id2.insert(0, enter_id2_placeholder)
+                enter_id2.config(fg="grey")
+
+        enter_id2.bind("<FocusIn>", enter_id2_click)
+        enter_id2.bind("<FocusOut>", enter_id2_non_click)
+        enter_id2.place(width=root.winfo_screenwidth() // 4, x=260, y=255)
+
+        def add_lab_technician():
+            name = enter_id.get()
+            password = enter_id2.get()
+            if name == "" or name == enter_id_placeholder or password == "" or password == enter_id2_placeholder:
+                messagebox.showwarning("Warning", "Please fill the required information!")
+                return
+            response = messagebox.askyesno("Are you sure?",f"do you want to add {name} as a Pharmacist?")
+            if response:
+                conn = sqlite3.connect("../db/database_storage.db")
+                cursor = conn.cursor()
+                cursor.execute("INSERT INTO lab_technician (name, password) VALUES (?, ?)", (name, password))
+                conn.commit()
+                conn.close()
+                messagebox.showinfo("Lab Technician added successfully", f"Lab Technician {name} has been registered in the system, and the provided password has been securely stored.")
+                enter_id.delete(0, tk.END)
+                enter_id2.delete(0, tk.END)
+            else:
+                enter_id.delete(0, tk.END)
+                enter_id2.delete(0, tk.END)
+
+        enter_submit = tk.Button(activity_frame, text="Add", font=("Open Sans ExtraBold", 30), bg="#ffffff", fg="#061e41",activeforeground="#ffffff", activebackground="#061e41", bd=0, highlightthickness=0,relief='flat', command=add_lab_technician)
+        enter_submit.place(x=360, y=340, width=150, height=51)
+
+        p_back = tk.Button(activity_frame, text="Back", font=("Open Sans ExtraBold", 20),width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff", activebackground="#061e41",activeforeground="#ffffff", relief="flat", bd=0, highlightthickness=0,command=manage_lab_technician)
+        p_back.place(x=600, y=390)
+
+    def remove_lab_technician():
+        clear_the_activity_frame()
+        p_header = tk.Label(activity_frame, text="Remove A Lab Technician", font=("Open Sans ExtraBold", 30), background="#061e41",fg="#ffffff")
+        p_header.place(x=175, y=15)
+        enter_text = tk.Label(activity_frame, text="Enter the Lab Technician's name", font=("Open Sans ExtraBold", 25),bg="#061e41", fg="#ffffff")
+        enter_text.place(x=160, y=65)
+        enter_id_placeholder = "Lab Technician's name"
+
+        enter_id = tk.Entry(activity_frame, bg="#ffffff", fg="grey", relief="flat", font=("Open Sans ExtraBold", 25))
+        enter_id.insert(0, enter_id_placeholder)
+
+        def enter_id_click(event):
+            if enter_id.get() == enter_id_placeholder:
+                enter_id.delete(0, tk.END)
+                enter_id.config(fg="#061e41")
+
+        def enter_id_non_click(event):
+            if enter_id.get() == "":
+                enter_id.insert(0, enter_id_placeholder)
+                enter_id.config(fg="grey")
+
+        enter_id.bind("<FocusIn>", enter_id_click)
+        enter_id.bind("<FocusOut>", enter_id_non_click)
+        enter_id.place(width=root.winfo_screenwidth() // 4, x=260, y=120)
+
+        def remove_lab_technician():
+            name = enter_id.get()
+            conn = sqlite3.connect("../db/database_storage.db")
+            cursor = conn.cursor()
+            if name == "" or name == enter_id_placeholder:
+                messagebox.showwarning("Warning!", "Please fill the required information!")
+                return
+            cursor.execute("SELECT name FROM lab_technician WHERE name = ?", (name,))
+            result = cursor.fetchall()
+            if result:
+                response = messagebox.askyesno("Are you sure?", f"do you want to remove {name}")
+                if response:
+                    cursor.execute("DELETE FROM lab_technician WHERE name = ?", (name,))
+                    conn.commit()
+                    conn.close()
+                    enter_id.delete(0, tk.END)
+                else:
+                    enter_id.delete(0, tk.END)
+            else:
+                messagebox.showwarning("Not Found!","the Lab Technician's name that you have specified is not found!")
+                enter_id.delete(0, tk.END)
+                conn.close()
+        enter_submit = tk.Button(activity_frame, text="remove", font=("Open Sans ExtraBold", 30), bg="#ffffff",fg="#061e41", activeforeground="#ffffff", activebackground="#061e41", bd=0,highlightthickness=0, relief='flat', command=remove_lab_technician)
+        enter_submit.place(x=325, y=190, width=200, height=51)
+        p_back = tk.Button(activity_frame, text="Back", font=("Open Sans ExtraBold", 20),width=root.winfo_screenwidth() // 85, fg="#061e41", bg="#ffffff", activebackground="#061e41",activeforeground="#ffffff", relief="flat", bd=0, highlightthickness=0,command=manage_lab_technician)
+        p_back.place(x=600, y=390)
+
+    def manage_lab_technician():
+        clear_the_activity_frame()
+        a_header = tk.Label(activity_frame, text="Manage Lab Technician", font=("Open Sans ExtraBold", 30),background="#061e41", fg="#ffffff")
+        a_header.place(x=210, y=15)
+        a_button1 = tk.Button(activity_frame, text="Add a Lab Technician", font=("Open Sans ExtraBold", 20),fg="#061e41", bg="#ffffff", width=48, activebackground="#061e41",activeforeground="#ffffff", bd=0, highlightthickness=0, command=add_lab_technician)
+        centering_x = root.winfo_screenwidth() // 1.5
+        centered_x = (centering_x - a_button1.winfo_width()) // 20
+        a_button1.place(x=centered_x, y=110)
+        a_button2 = tk.Button(activity_frame, text="Remove a Lab Technician", font=("Open Sans ExtraBold", 20), fg="#061e41",bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", width=48, bd=0,highlightthickness=0, command=remove_lab_technician)
+        a_button2.place(x=centered_x, y=200)
+
+#sidebar menu
     main_menu_button1 = tk.Button(main_menu_frame, text=f"Manage \n doctors", font=("Open Sans ExtraBold", 25), width=root.winfo_screenwidth() // 93, fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=manage_doctors)
     main_menu_button1.place(x=20, y=130)
     main_menu_button2 = tk.Button(main_menu_frame, text=f"Manage \n pharmacist", font=("Open Sans ExtraBold", 25),width=root.winfo_screenwidth() // 93, fg="#061e41", bg="#ffffff",activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=manage_pharmacist)
     main_menu_button2.place(x=20, y=270)
-    main_menu_button3 = tk.Button(main_menu_frame, text=f"Manage \n lab technician", font=("Open Sans ExtraBold", 25),width=root.winfo_screenwidth() // 93, fg="#061e41", bg="#ffffff",activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0)
+    main_menu_button3 = tk.Button(main_menu_frame, text=f"Manage \n lab technician", font=("Open Sans ExtraBold", 25),width=root.winfo_screenwidth() // 93, fg="#061e41", bg="#ffffff",activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=manage_lab_technician)
     main_menu_button3.place(x=20, y=410)
     main_menu_button4 = tk.Button(main_menu_frame, text=f"Manage \n patient", font=("Open Sans ExtraBold", 25),width=root.winfo_screenwidth() // 93, fg="#061e41", bg="#ffffff",activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0,)
 
