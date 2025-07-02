@@ -7,7 +7,7 @@ try:
     cursor = conn.cursor()
 
     # Execute a query to select all data from the existed_patient table
-    cursor.execute("SELECT * FROM pharmacist")
+    cursor.execute("SELECT * FROM existed_patient")
 
     # Fetch all the rows from the result of the query
     rows = cursor.fetchall()
