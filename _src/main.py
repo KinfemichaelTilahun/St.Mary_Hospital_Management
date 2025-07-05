@@ -8,6 +8,7 @@ from modules.new_patient import new_patient_form
 from modules.lab_technician import lab_technician_form
 from modules.pharmacist import pharmacist_form
 from modules.admin import admin_form
+from modules.doctor import doctor_form
 
 #Installing connection
 connection, cursor = database.installing_database()
@@ -15,14 +16,11 @@ connection, cursor = database.installing_database()
 root = tk.Tk()
 
 def patient():
-    from modules import patient
     panel_left.pack_forget()
     panel_right.pack_forget()
 
 def doctor():
-    from modules import doctor
-    panel_left.pack_forget()
-    panel_right.pack_forget()
+    doctor_form(root, panel_left, panel_right)
 
 def pharmacist():
     pharmacist_form(root, panel_left, panel_right)
