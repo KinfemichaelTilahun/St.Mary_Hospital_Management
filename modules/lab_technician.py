@@ -418,7 +418,65 @@ def lab_technician_form(root, panel_left, panel_right):
         submit_button = tk.Button(activity_frame, text="Submit", font=("Open Sans ExtraBold", 20), width=root.winfo_screenwidth()//85, fg="#061e41", bg="#ffffff", activebackground="#061e41", activeforeground="#ffffff", relief="flat", bd=0, highlightthickness=0, command= submit_new_result)
         submit_button.place(x=585, y=320)
 
-    main_menu_button1 = tk.Button(main_menu_frame, text=f"Access patient \n records", font=("Open Sans ExtraBold", 25), width=root.winfo_screenwidth()//93, fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=access_patient_records)
+    def check_lab_test():
+        clear_the_activity_frame()
+        m_header = tk.Label(activity_frame, text="Check Waiting Lab Test", font=("Open Sans ExtraBold", 30), background="#061e41", fg="#ffffff")
+        m_header.place(x=255, y=15)
+        enter_text2 = tk.Label(activity_frame, text="Enter the patient id", font=("Open Sans ExtraBold", 25), bg="#061e41", fg="#ffffff")
+        enter_text2.place(x=285, y=73)
+        enter_id_placeholder2 = "         Patient Id"
+
+        enter_id2 = tk.Entry(activity_frame, bg="#ffffff", fg="grey", relief="flat",font=("Open Sans ExtraBold", 25))
+        enter_id2.insert(0, enter_id_placeholder2)
+
+        def enter_id_click2(event):
+            if enter_id2.get() == enter_id_placeholder2:
+                enter_id2.delete(0, tk.END)
+                enter_id2.config(fg="#061e41")
+
+        def enter_id_non_click2(event):
+            if enter_id2.get() == "":
+                enter_id2.insert(0, enter_id_placeholder2)
+                enter_id2.config(fg="grey")
+
+        enter_id2.bind("<FocusIn>", enter_id_click2)
+        enter_id2.bind("<FocusOut>", enter_id_non_click2)
+        enter_id2.place(width=root.winfo_screenwidth() // 4, x=260, y=128)
+
+        def grab_submit2():
+            id_no = enter_id2.get()
+            conn = sqlite3.connect("../db/database_storage.db")
+            cursor = conn.cursor()
+            cursor.execute("SELECT patient_id, name, waiting_lab_test FROM existed_patient WHERE patient_id = ?",(id_no,))
+            m_result = cursor.fetchone()
+            if id_no == enter_id_placeholder2 or id_no == "":
+                messagebox.showwarning("Input Error", "Please enter ID number.")
+                return
+            if m_result:
+                patient_id = m_result[0]
+                name = m_result[1]
+                waiting_lab_test = m_result[2]
+                v_patient_id = tk.Label(activity_frame, text=patient_id, font=("Open Sans ExtraBold", 20),fg="#ffffff", bg="#061e41")
+                v_patient_id.place(x=245, y=180)
+                v_name = tk.Label(activity_frame, text=name, font=("Open Sans ExtraBold", 20), fg="#ffffff",bg="#061e41")
+                v_name.place(x=195, y=220)
+                v_waiting_lab_test = tk.Label(activity_frame, text=waiting_lab_test, font=("Open Sans ExtraBold", 20),fg="#ffffff", bg="#061e41")
+                v_waiting_lab_test.place(x=350, y=260)
+            else:
+                messagebox.showwarning("Error", "Please provide a valid ID number.")
+
+        enter_submit2 = tk.Button(activity_frame, text="➜", font=("Open Sans ExtraBold", 30), bg="#ffffff",fg="#061e41", activeforeground="#ffffff", activebackground="#061e41", bd=0,highlightthickness=0, relief='flat', command=grab_submit2)
+        enter_submit2.place(x=610, y=128, width=50, height=51)
+        m_id = tk.Label(activity_frame, text="Patient Id -", font=("Open Sans ExtraBold", 20), bg="#061e41",fg="#ffffff")
+        m_id.place(x=90, y=180)
+        m_name = tk.Label(activity_frame, text="Name -", font=("Open Sans ExtraBold", 20), bg="#061e41",fg="#ffffff")
+        m_name.place(x=90, y=220)
+        m_current_illness = tk.Label(activity_frame, text="Ordered Lab Test -", font=("Open Sans ExtraBold", 20),bg="#061e41", fg="#ffffff")
+        m_current_illness.place(x=90, y=260)
+
+    main_menu_button1 = tk.Button(main_menu_frame, text=f"Access Patient \n records", font=("Open Sans ExtraBold", 25), width=root.winfo_screenwidth()//93, fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=access_patient_records)
     main_menu_button1.place(x=20, y=130)
     main_menu_button2 = tk.Button(main_menu_frame, text=f"Update Patient \n lab result", font=("Open Sans ExtraBold", 25), width=root.winfo_screenwidth()//93, fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=update_patient_lab_result)
     main_menu_button2.place(x=20, y=270)
+    main_menu_button3 = tk.Button(main_menu_frame, text=f"Check the \n waiting list",font=("Open Sans ExtraBold", 25), width=root.winfo_screenwidth() // 93, fg="#061e41", bg="#ffffff", activeforeground="#ffffff", activebackground="#061e41", highlightthickness=0, bd=0, command=check_lab_test)
+    main_menu_button3.place(x=20, y=410)
