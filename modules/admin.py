@@ -635,7 +635,7 @@ def admin_form(root, panel_left, panel_right):
     def manage_patient():
         clear_the_activity_frame()
         a_header = tk.Label(activity_frame, text="Manage patient", font=("Open Sans ExtraBold", 30),background="#061e41", fg="#ffffff")
-        a_header.place(x=210, y=15)
+        a_header.place(x=290, y=15)
         a_button1 = tk.Button(activity_frame, text="Add a patient", font=("Open Sans ExtraBold", 20),fg="#061e41", bg="#ffffff", width=48, activebackground="#061e41",activeforeground="#ffffff", bd=0, highlightthickness=0, command=add_patient)
         centering_x = root.winfo_screenwidth() // 1.5
         centered_x = (centering_x - a_button1.winfo_width()) // 20

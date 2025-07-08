@@ -9,6 +9,7 @@ from modules.lab_technician import lab_technician_form
 from modules.pharmacist import pharmacist_form
 from modules.admin import admin_form
 from modules.doctor import doctor_form
+from modules.patient import patient_form
 
 #Installing connection
 connection, cursor = database.installing_database()
@@ -16,8 +17,7 @@ connection, cursor = database.installing_database()
 root = tk.Tk()
 
 def patient():
-    panel_left.pack_forget()
-    panel_right.pack_forget()
+    patient_form(root, panel_left, panel_right, name)
 
 def doctor():
     doctor_form(root, panel_left, panel_right)
@@ -33,6 +33,7 @@ def admin():
 
 def new_patient_handler():
     new_patient_form(root, panel_left, panel_right)
+
 #Title Heading
 root.title("St.Mary Hospital")
 root.iconbitmap('../media/image/ico_icon/1.ico')
@@ -99,11 +100,11 @@ login_password_entry.bind("<FocusIn>", password_click)
 login_password_entry.bind("<FocusOut>", password_focusout)
 login_password_entry.place(x=panel_width//5.65, y=360, height=70 , width=panel_width//2 + 100)
 
+name = login_name_entry.get()
+
 def submit_login_data(name, password):
     conn = sqlite3.connect("../db/database_storage.db")
     cursor = conn.cursor()
-    user_name_input = login_name_entry.get()
-    user_password_input = login_password_entry.get()
     user_type_table=["doctor","pharmacist","lab_technician","existed_patient","admin"]
     for table in user_type_table:
         cursor.execute(f"SELECT * FROM {table} WHERE name = ? AND password = ?", (name, password))
@@ -126,30 +127,15 @@ def handel_login():
     user_type, user_info = submit_login_data(name, password)
 
     if user_type:
-        #doctor check login
-        cursor.execute("SELECT name FROM doctor WHERE name = ? AND password = ?", (name, password))
-        doctor_check_login = cursor.fetchone()
-        if doctor_check_login:
+        if user_type == "doctor":
             doctor()
-        #pharmacist check login
-        cursor.execute("SELECT name FROM pharmacist WHERE name = ? AND password = ?", (name, password))
-        pharmacist_check_login = cursor.fetchone()
-        if pharmacist_check_login:
+        elif user_type == "pharmacist":
             pharmacist()
-        #lab_technician check login
-        cursor.execute("SELECT name FROM lab_technician WHERE name = ? AND password = ?", (name, password))
-        lab_technician_check_login=cursor.fetchone()
-        if lab_technician_check_login:
+        elif user_type == "lab_technician":
             lab_technician()
-        #existed_patient check login
-        cursor.execute("SELECT name FROM existed_patient WHERE name = ? AND password = ?", (name, password))
-        existed_patient_check_login=cursor.fetchone()
-        if existed_patient_check_login:
+        elif user_type == "existed_patient":
             patient()
-        #admin check login
-        cursor.execute("SELECT name FROM admin WHERE name = ? AND password = ?", (name, password))
-        admin_check_login=cursor.fetchone()
-        if admin_check_login:
+        elif user_type == "admin":
             admin()
     else:
         messagebox.showerror("Login failed","Login Unsuccessful! ")
