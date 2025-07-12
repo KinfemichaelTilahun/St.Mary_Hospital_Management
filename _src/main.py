@@ -10,6 +10,7 @@ from modules.pharmacist import pharmacist_form
 from modules.admin import admin_form
 from modules.doctor import doctor_form
 from modules.patient import patient_form
+from modules import session
 
 #Installing connection
 connection, cursor = database.installing_database()
@@ -17,7 +18,7 @@ connection, cursor = database.installing_database()
 root = tk.Tk()
 
 def patient():
-    patient_form(root, panel_left, panel_right, name)
+    patient_form(root, panel_left, panel_right)
 
 def doctor():
     doctor_form(root, panel_left, panel_right)
@@ -100,7 +101,6 @@ login_password_entry.bind("<FocusIn>", password_click)
 login_password_entry.bind("<FocusOut>", password_focusout)
 login_password_entry.place(x=panel_width//5.65, y=360, height=70 , width=panel_width//2 + 100)
 
-name = login_name_entry.get()
 
 def submit_login_data(name, password):
     conn = sqlite3.connect("../db/database_storage.db")
@@ -125,6 +125,10 @@ def handel_login():
 
 
     user_type, user_info = submit_login_data(name, password)
+    if user_type:
+        session.current_user = {
+            "name" : name,
+        }
 
     if user_type:
         if user_type == "doctor":
@@ -139,6 +143,7 @@ def handel_login():
             admin()
     else:
         messagebox.showerror("Login failed","Login Unsuccessful! ")
+name = login_name_entry.get()
 #Login buttons
 login_submit_button = tk.Button(panel_left, text='Submit', relief='flat', font=('Open Sans ExtraBold',20), bd=0, bg="#ffffff", fg="#061e41", activebackground="#061e41", activeforeground="#ffffff", highlightthickness=0, padx=20, command=handel_login)
 login_submit_button.place(x=panel_width//2.6, y= 470)
