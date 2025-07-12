@@ -1,0 +1,15 @@
+Admin
+    username = 1
+    password = 1
+Doctor
+    username = 2
+    password = 2
+Pharmacist
+    username = 3
+    password = 3
+Lab Technician
+    username = 4
+    password = 4
+Patient
+    username = 5
+    password = 5
