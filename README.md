@@ -30,11 +30,12 @@ A simple and functional Hospital Management System designed for **St. Mary Hospi
    python main.py
    ```
 
-> Make sure you have Python 3 installed on your system.
+> Make sure you have Python 3.13 and Open Sans font installed on your system.
 
 ## 📌 Notes
 
 - This project was created as a student project for demonstration purposes.
+- The UI is not fully responsive. It was designed and optimized for 1366×768 resolution and may not display properly on other screen sizes.
 - You can freely modify, extend, or use it as a base for other health-related software.
 
 ## 🧑‍💻 Author
