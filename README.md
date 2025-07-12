@@ -27,8 +27,11 @@ A simple and functional Hospital Management System designed for **St. Mary Hospi
 
 2. **Run the app**
    ```bash
-   python main.py
+   python _src/main.py
    ```
+3. **Access credentials**
+   > Go to the `docs/` folder to find all login credentials and access roles used in the system.
+
 
 > Make sure you have Python 3.13 and Open Sans font installed on your system.
 
